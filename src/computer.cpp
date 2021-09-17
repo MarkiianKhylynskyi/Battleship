@@ -11,23 +11,35 @@ std::set<pair> computer::posible_positions() const
 	else if (wounded_ship.size() == 1)
 	{
 		std::set<pair> positions;
-		int16_t x = (*(wounded_ship.begin())).first;
-		int16_t y = (*(wounded_ship.begin())).second;
+		int16_t x = (*wounded_ship.begin()).first;
+		int16_t y = (*wounded_ship.begin()).second;
 		positions.insert({ x + 1,y });
 		positions.insert({ x,y + 1 });
 		positions.insert({ x - 1,y });
 		positions.insert({ x,y - 1 });
-		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(), std::inserter(ret_positions,ret_positions.begin()));
+		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(), 
+			std::inserter(ret_positions,ret_positions.begin()));
+
 	}
 	else
 	{
-
+		std::set<pair> positions;
+		std::set<pair>::iterator begin = wounded_ship.begin();
+		std::set<pair>::iterator end = wounded_ship.end();
+		--end;
+		int16_t dif_x = ((*end).first - (*begin).first) / (wounded_ship.size() - 1);
+		int16_t dif_y = ((*end).second - (*begin).second) / (wounded_ship.size() - 1);
+		positions.insert({ (*begin).first - dif_x,(*begin).second - dif_y });
+		positions.insert({ (*end).first + dif_x,(*end).second + dif_y });
+		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(),
+			std::inserter(ret_positions, ret_positions.begin()));
 	}
 	return ret_positions;
 }
 
 pair computer::shoot_with_wounded_ship() const
 {
+
 	return { 1,1 };
 }
 
@@ -36,8 +48,10 @@ pair computer::shoot_without_wounded_ship() const
 	std::random_device rd;
 	std::mt19937 mt(rd());
 	std::uniform_int_distribution<int> uid(0, empty_cells.size() - 1);
-	pair position(uid(mt),uid(mt));
-	return position;
+	size_t index = uid(mt);
+	std::set<pair>::iterator it = empty_cells.begin();
+	std::advance(it, index);
+	return *it;
 }
 
 void computer::past_ship(size_t size)

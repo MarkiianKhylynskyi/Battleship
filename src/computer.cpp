@@ -2,6 +2,30 @@
 
 //-------------------- private methods --------------------
 
+std::set<pair> computer::posible_positions() const
+{
+	std::set<pair> ret_positions;
+	if (wounded_ship.empty())
+	{
+	}
+	else if (wounded_ship.size() == 1)
+	{
+		std::set<pair> positions;
+		int16_t x = (*(wounded_ship.begin())).first;
+		int16_t y = (*(wounded_ship.begin())).second;
+		positions.insert({ x + 1,y });
+		positions.insert({ x,y + 1 });
+		positions.insert({ x - 1,y });
+		positions.insert({ x,y - 1 });
+		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(), std::inserter(ret_positions,ret_positions.begin()));
+	}
+	else
+	{
+
+	}
+	return ret_positions;
+}
+
 pair computer::shoot_with_wounded_ship() const
 {
 	return { 1,1 };
@@ -14,27 +38,6 @@ pair computer::shoot_without_wounded_ship() const
 	std::uniform_int_distribution<int> uid(0, empty_cells.size() - 1);
 	pair position(uid(mt),uid(mt));
 	return position;
-}
-
-std::vector<pair> computer::posible_positions() const
-{
-	std::vector<pair> positions;
-	if (wounded_ship.size() == 0)
-	{}
-	else if (wounded_ship.size() == 1)
-	{
-		int16_t x = wounded_ship[0].x;
-		int16_t y = wounded_ship[0].y;
-		positions.push_back({ x + 1,y });
-		positions.push_back({ x,y + 1 });
-		positions.push_back({ x - 1,y });
-		positions.push_back({ x,y - 1 });
-	}
-	else
-	{
-
-	}
-	return positions;
 }
 
 void computer::past_ship(size_t size)
@@ -50,7 +53,7 @@ computer::computer()
 	{
 		for (int16_t j = 0; j < grid::MapSize; ++j)
 		{
-			empty_cells.push_back({ i,j });
+			empty_cells.insert({ i,j });
 		}
 	}
 
@@ -62,10 +65,10 @@ void computer::past_ships()
 	
 }
 
-void computer::shoot()
+void computer::shoot(player& plr, bool flag)
 {
 	pair position;
-	if (wounded_ship.size() == 0)
+	if (wounded_ship.empty())
 	{
 		position = shoot_without_wounded_ship();
 	}
@@ -73,9 +76,4 @@ void computer::shoot()
 	{
 		position = shoot_with_wounded_ship();
 	}
-}
-
-std::vector<pair> vector_intersection(std::vector<pair> v1, std::vector<pair> v2)
-{
-	return std::vector<pair>();
 }

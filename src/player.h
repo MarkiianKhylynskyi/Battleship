@@ -12,7 +12,7 @@ public:
 	virtual void past_ships() = 0;
 
 	//
-	virtual void shoot() = 0;
+	virtual void shoot(player& plr, bool flag) = 0;
 
 	//Returns whether the player has ships which aren't drowned
 	bool not_drowned_ships() const;

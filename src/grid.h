@@ -3,7 +3,6 @@
 
 #include<array>
 #include<cstdint>
-#include<array>
 
 class grid
 {

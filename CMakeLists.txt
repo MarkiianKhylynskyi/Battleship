@@ -14,8 +14,6 @@ add_executable(${PROJECT_NAME}
 	src/human.h
 	src/grid.cpp
 	src/grid.h
-	src/pair.cpp
-	src/pair.h
 	src/player.cpp
 	src/player.h
 )

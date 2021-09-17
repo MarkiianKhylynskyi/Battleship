@@ -14,12 +14,12 @@ void game::play()
 	{
 		if (shoots_firs_player)
 		{
-			first_player.shoot();
+			first_player.shoot(second_player, shoots_firs_player);
 			game_continues = second_player.not_drowned_ships();
 		}
 		else
 		{
-			second_player.shoot();
+			second_player.shoot(first_player, shoots_firs_player);
 			game_continues = first_player.not_drowned_ships();
 		}
 	}

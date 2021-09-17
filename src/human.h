@@ -10,7 +10,7 @@ public:
 
 	void past_ships() override;
 
-	void shoot() override;
+	void shoot(player& plr, bool flag) override;
 };
 
 #endif

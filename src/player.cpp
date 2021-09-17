@@ -2,7 +2,6 @@
 
 bool player::not_drowned_ships() const
 {
-	//should i iterate on container by iterator?
 	for (size_t i = 0; i < grid::MapSize; ++i)
 	{
 		for (size_t j = 0; j < grid::MapSize; ++j)

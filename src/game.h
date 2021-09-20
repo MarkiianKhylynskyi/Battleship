@@ -3,6 +3,9 @@
 
 #include"player.h"
 
+#include <stdlib.h>
+#include<Windows.h>
+
 class game
 {
 private:

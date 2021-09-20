@@ -3,39 +3,50 @@
 
 #include"player.h"
 
-#include<set>
+#include<vector>
 #include<iterator>
 #include<utility>
 #include<algorithm>
 #include<random>
+#include<Windows.h>
 
-typedef std::pair<int16_t, int16_t> pair;
-
-//std::vector<pair>  vector_intersection(std::vector<pair>& v1, std::vector<pair>& v2);
+typedef std::pair<int16_t, int16_t> position;
 
 class computer : public player
 {
 private:
-	//std::random_device rd;
-	//std::mt19937 mt;
-	std::set<pair> empty_cells;
-	std::set<pair> wounded_ship;
+	static std::mt19937 mt;
+	std::vector<position> empty_cells;
+	std::vector<position> wounded_ship;
 
-	std::set<pair> posible_positions() const;
+	//Return a random number from the interval [0,max]
+	int16_t random(int16_t max) const;
+
+	//Erases the elment pos from the vector vec
+	void erase_from_vector(std::vector<position>& vec, position pos);
+
+	//Erases the elment pos from the vector vec
+	void erase_from_vector(std::vector<position>& vec, position pos) const;
+
+	void empty_cells_reset();
+
+	std::vector<position> posible_past_positions(bool vertical, int16_t siz) const;
+
+	std::vector<position> posible_positions() const;
 
 	//
-	pair shoot_with_wounded_ship() const;
+	position shoot_with_wounded_ship() const;
 
 	//
-	pair shoot_without_wounded_ship() const;
+	position shoot_without_wounded_ship() const;
 
-	void past_ship(size_t size);
+	bool past_ship(int16_t size);
 public:
 	computer();
 
 	void past_ships() override;
 
-	void shoot(player& plr, bool flag) override;
+	void shoot(player& plr, bool& flag) override;
 };
 
 #endif

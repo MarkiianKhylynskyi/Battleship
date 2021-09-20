@@ -1,93 +1,230 @@
 #include"computer.h"
 
+std::mt19937 computer::mt;
+
 //-------------------- private methods --------------------
 
-std::set<pair> computer::posible_positions() const
+int16_t computer::random(int16_t max) const
 {
-	std::set<pair> ret_positions;
+	std::uniform_int_distribution<int> uid(0, max);
+	return uid(mt);
+}
+
+void computer::erase_from_vector(std::vector<position>& vec, position pos)
+{
+	std::vector<position>::iterator it = std::find(vec.begin(), vec.end(), pos);
+	if (it != vec.end())
+	{
+		vec.erase(it);
+	}
+}
+
+void computer::erase_from_vector(std::vector<position>& vec, position pos) const
+{
+	std::vector<position>::iterator it = std::find(vec.begin(), vec.end(), pos);
+	if (it != vec.end())
+	{
+		vec.erase(it);
+	}
+}
+
+void computer::empty_cells_reset()
+{
+	empty_cells.clear();
+	for (int16_t i = 0; i < grid::GridSize; ++i)
+	{
+		for (int16_t j = 0; j < grid::GridSize; ++j)
+		{
+			empty_cells.push_back(position(i,j));
+		}
+	}
+}
+
+std::vector<position> computer::posible_past_positions(bool vertical, int16_t size) const
+{
+	std::vector<position> positions = empty_cells;
+	if (vertical)
+	{
+		for (position pos : empty_cells)
+		{
+			if (std::find(empty_cells.begin(), empty_cells.end(), position(pos.first + 1, pos.second)) == empty_cells.end())
+			{
+				for (int16_t x = 0; x < size - 1; ++x)
+				{
+					erase_from_vector(positions, position(pos.first - x, pos.second));
+				}
+			}
+		}
+	}
+	else
+	{
+		for (position pos : empty_cells)
+		{
+			if (std::find(empty_cells.begin(), empty_cells.end(), position(pos.first, pos.second + 1)) == empty_cells.end())
+			{
+				for (int16_t y = 0; y < size - 1; ++y)
+				{
+					erase_from_vector(positions, position(pos.first, pos.second - y));
+				}
+			}
+		}
+	}
+	return positions;
+}
+
+bool computer::past_ship(int16_t size)
+{
+	bool vertical = random(1);
+
+	std::vector<position> positions = posible_past_positions(vertical, size);
+	if (positions.size() > 0) {
+		position pos = positions[random(positions.size() - 1)];
+
+		if (vertical)
+		{
+			for (int16_t x = 0; x < size; ++x)
+			{
+				gr.set(pos.first + x, pos.second, grid::Status::Ship);
+			}
+
+			for (int16_t x = pos.first - 1; x < pos.first + size + 1; ++x)
+			{
+				for (int16_t y = pos.second - 1; y < pos.second + 2; ++y)
+				{
+					erase_from_vector(empty_cells, position(x, y));
+				}
+			}
+		}
+		else
+		{
+			for (int16_t y = 0; y < size; ++y)
+			{
+				gr.set(pos.first, pos.second + y, grid::Status::Ship);
+			}
+
+			for (int16_t y = pos.second - 1; y < pos.second + size + 1; ++y)
+			{
+				for (int16_t x = pos.first - 1; x < pos.first + 2; ++x)
+				{
+					erase_from_vector(empty_cells, position(x, y));
+				}
+			}
+		}
+		return false;
+	}
+	else return true;
+}
+
+std::vector<position> computer::posible_positions() const
+{
+	std::vector<position> ret_positions;
 	if (wounded_ship.empty())
 	{
 	}
 	else if (wounded_ship.size() == 1)
 	{
-		std::set<pair> positions;
-		int16_t x = (*wounded_ship.begin()).first;
-		int16_t y = (*wounded_ship.begin()).second;
-		positions.insert({ x + 1,y });
-		positions.insert({ x,y + 1 });
-		positions.insert({ x - 1,y });
-		positions.insert({ x,y - 1 });
-		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(), 
-			std::inserter(ret_positions,ret_positions.begin()));
+		std::vector<position> positions;
+		int16_t x = wounded_ship[0].first;
+		int16_t y = wounded_ship[0].second;
+		positions.push_back({ x + 1,y });
+		positions.push_back({ x,y + 1 });
+		positions.push_back({ x - 1,y });
+		positions.push_back({ x,y - 1 });
+		std::sort(positions.begin(), positions.end());
 
+		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(), 
+			std::back_inserter(ret_positions));
 	}
 	else
 	{
-		std::set<pair> positions;
-		std::set<pair>::iterator begin = wounded_ship.begin();
-		std::set<pair>::iterator end = wounded_ship.end();
-		--end;
-		int16_t dif_x = ((*end).first - (*begin).first) / (wounded_ship.size() - 1);
-		int16_t dif_y = ((*end).second - (*begin).second) / (wounded_ship.size() - 1);
-		positions.insert({ (*begin).first - dif_x,(*begin).second - dif_y });
-		positions.insert({ (*end).first + dif_x,(*end).second + dif_y });
+		std::vector<position> positions;
+		const int16_t size = wounded_ship.size() - 1;
+		
+		int16_t dif_x = (wounded_ship[size].first - wounded_ship[0].first) / (size);
+		int16_t dif_y = (wounded_ship[size].second - wounded_ship[0].second) / (size);
+		positions.push_back({ wounded_ship[0].first - dif_x,wounded_ship[0].second - dif_y });
+		positions.push_back({ wounded_ship[size].first + dif_x,wounded_ship[size].second + dif_y });
+		std::sort(positions.begin(), positions.end());
+
 		std::set_intersection(positions.begin(), positions.end(), empty_cells.begin(), empty_cells.end(),
-			std::inserter(ret_positions, ret_positions.begin()));
+			std::back_inserter(ret_positions));
 	}
 	return ret_positions;
 }
 
-pair computer::shoot_with_wounded_ship() const
+position computer::shoot_with_wounded_ship() const
 {
-
-	return { 1,1 };
+	std::vector<position> positions = posible_positions();
+	int16_t index = random(positions.size() - 1);
+	
+	return positions[index];
 }
 
-pair computer::shoot_without_wounded_ship() const
+position computer::shoot_without_wounded_ship() const
 {
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_int_distribution<int> uid(0, empty_cells.size() - 1);
-	size_t index = uid(mt);
-	std::set<pair>::iterator it = empty_cells.begin();
-	std::advance(it, index);
-	return *it;
-}
-
-void computer::past_ship(size_t size)
-{
-
+	int16_t index = random(empty_cells.size() - 1);
+	return empty_cells[index];
 }
 
 //-------------------- public methods --------------------
 
 computer::computer()
 {
-	for (int16_t i = 0; i < grid::MapSize; ++i)
-	{
-		for (int16_t j = 0; j < grid::MapSize; ++j)
-		{
-			empty_cells.insert({ i,j });
-		}
-	}
+	empty_cells_reset();
 
-	//mt = std::mt19937(rd());
+	std::random_device rd;
+	mt = std::mt19937(rd());
 }
 
 void computer::past_ships()
 {
-	
+	bool ships_do_not_fit = true;
+	while (ships_do_not_fit)
+	{
+		gr.reset();
+		for (int16_t i = 0; i < 4; ++i) ships_do_not_fit = past_ship(1);
+		for (int16_t i = 0; i < 3; ++i) ships_do_not_fit = past_ship(2);
+		for (int16_t i = 0; i < 2; ++i) ships_do_not_fit = past_ship(3);
+		ships_do_not_fit = past_ship(4);
+		empty_cells_reset();
+		std::sort(empty_cells.begin(), empty_cells.end());
+	}
 }
 
-void computer::shoot(player& plr, bool flag)
+void computer::shoot(player& plr, bool& flag)
 {
-	pair position;
+	Sleep(500);
+	position shoot_position;
 	if (wounded_ship.empty())
 	{
-		position = shoot_without_wounded_ship();
+		shoot_position = shoot_without_wounded_ship();
 	}
 	else
 	{
-		position = shoot_with_wounded_ship();
+		shoot_position = shoot_with_wounded_ship();
+	}
+	empty_cells.erase(std::find(empty_cells.begin(), empty_cells.end(), shoot_position));
+
+	if (plr.get_grid()[shoot_position.first][shoot_position.second] == grid::Status::Ship)
+	{
+		plr.set_grid(shoot_position.first, shoot_position.second, grid::Status::WoundedShip);
+		wounded_ship.push_back(shoot_position);
+		std::sort(wounded_ship.begin(), wounded_ship.end());
+
+		for (position pos : posible_positions())
+		{
+			if (plr.get_grid()[pos.first][pos.second] == grid::Status::Ship)
+			{
+				std::sort(wounded_ship.begin(), wounded_ship.end());
+				return;
+			}
+		}
+
+		wounded_ship.clear();
+	}
+	else
+	{
+		plr.set_grid(shoot_position.first, shoot_position.second, grid::Status::Bomb);
+		flag = !flag;
 	}
 }

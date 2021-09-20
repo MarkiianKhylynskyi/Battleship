@@ -12,6 +12,13 @@ void game::play()
 	second_player.past_ships();
 	while (game_continues)
 	{
+		//--------------------------------------
+		system("cls");
+		first_player.print();
+		std::cout << std::endl;
+		second_player.print();
+		//--------------------------------------
+
 		if (shoots_firs_player)
 		{
 			first_player.shoot(second_player, shoots_firs_player);
@@ -23,4 +30,13 @@ void game::play()
 			game_continues = first_player.not_drowned_ships();
 		}
 	}
+	system("cls");
+	first_player.print();
+	std::cout << std::endl;
+	second_player.print();
+	Sleep(1700);
+	//system("cls");
+	if (shoots_firs_player) std::cout << "Win first player" << std::endl;
+	else std::cout << "Win second player" << std::endl;
+
 }

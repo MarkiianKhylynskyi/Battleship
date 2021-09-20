@@ -5,7 +5,7 @@ void human::past_ships()
 
 }
 
-void human::shoot(player& plr, bool flag)
+void human::shoot(player& plr, bool& flag)
 {
 
 }

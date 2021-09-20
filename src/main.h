@@ -2,5 +2,7 @@
 #define MAIN_H
 
 #include"game.h"
+#include"computer.h"
+#include"human.h"
 
 #endif

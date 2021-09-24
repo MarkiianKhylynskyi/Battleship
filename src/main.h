@@ -5,4 +5,4 @@
 #include"computer.h"
 #include"human.h"
 
-#endif
+#endif //MAIN_H

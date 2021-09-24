@@ -19,4 +19,4 @@ public:
 	void play();
 };
 
-#endif
+#endif //GAME_H

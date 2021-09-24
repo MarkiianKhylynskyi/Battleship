@@ -3,10 +3,15 @@
 
 #include"grid.h"
 
+#include<vector>
+
+typedef std::pair<int16_t, int16_t> position;
+
 class player
 {
 protected:
 	grid gr;
+	std::vector<position> empty_cells;
 public:
 	//Arranges ships on the primary grid
 	virtual void past_ships() = 0;
@@ -19,9 +24,11 @@ public:
 
 	const std::array<std::array<grid::Status, grid::GridSize>, grid::GridSize>& get_grid() const;
 
+	const std::vector<position>& get_empty_cells() const;
+
 	void set_grid(int16_t x, int16_t y, grid::Status status);
 
 	void print();
 };
 
-#endif
+#endif //PLAYER_H

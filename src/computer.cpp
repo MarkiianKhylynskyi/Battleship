@@ -182,10 +182,10 @@ void computer::past_ships()
 	while (ships_do_not_fit)
 	{
 		gr.reset();
-		for (int16_t i = 0; i < 4; ++i) ships_do_not_fit = past_ship(1);
-		for (int16_t i = 0; i < 3; ++i) ships_do_not_fit = past_ship(2);
-		for (int16_t i = 0; i < 2; ++i) ships_do_not_fit = past_ship(3);
 		ships_do_not_fit = past_ship(4);
+		for (int16_t i = 0; i < 2; ++i) ships_do_not_fit = past_ship(3);
+		for (int16_t i = 0; i < 3; ++i) ships_do_not_fit = past_ship(2);
+		for (int16_t i = 0; i < 4; ++i) ships_do_not_fit = past_ship(1);
 		empty_cells_reset();
 		std::sort(empty_cells.begin(), empty_cells.end());
 	}

@@ -3,20 +3,16 @@
 
 #include"player.h"
 
-#include<vector>
 #include<iterator>
 #include<utility>
 #include<algorithm>
 #include<random>
 #include<Windows.h>
 
-typedef std::pair<int16_t, int16_t> position;
-
 class computer : public player
 {
 private:
 	static std::mt19937 mt;
-	std::vector<position> empty_cells;
 	std::vector<position> wounded_ship;
 
 	//Return a random number from the interval [0,max]
@@ -34,19 +30,21 @@ private:
 
 	std::vector<position> posible_positions() const;
 
-	//
+	//Returns a shoot position when there is a wounded ship
 	position shoot_with_wounded_ship() const;
 
-	//
+	//Returns a shoot position when there isn't a wounded ship
 	position shoot_without_wounded_ship() const;
 
+	//Arranges a ship with length size on the primary grid
 	bool past_ship(int16_t size);
 public:
 	computer();
 
+	//Arranges ships on the primary grid
 	void past_ships() override;
 
 	void shoot(player& plr, bool& flag) override;
 };
 
-#endif
+#endif //COMPUTER_H

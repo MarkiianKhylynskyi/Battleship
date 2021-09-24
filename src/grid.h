@@ -1,5 +1,5 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef GRID_H
+#define GRID_H
 
 #include<array>
 #include<cstdint>
@@ -32,4 +32,4 @@ public:
 	void print();
 };
 
-#endif
+#endif //GRID_H

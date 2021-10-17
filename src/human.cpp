@@ -1,4 +1,6 @@
-#include"human.h"
+#include <algorithm>
+
+#include"human.hpp"
 
 human::human(std::function<grid()> func_past_ships, std::function<position()> func_shoot)
 	: func_past_ships(func_past_ships), func_shoot(func_shoot)
@@ -17,11 +19,11 @@ void human::shoot(player& plr, bool& flag)
 
 	if (plr.get_grid()[shoot_position.first][shoot_position.second] == grid::Status::Ship)
 	{
-		plr.set_grid(shoot_position.first, shoot_position.second, grid::Status::WoundedShip);
+		plr.set_grid(shoot_position, grid::Status::WoundedShip);
 	}
 	else
 	{
-		plr.set_grid(shoot_position.first, shoot_position.second, grid::Status::Bomb);
+		plr.set_grid(shoot_position, grid::Status::Bomb);
 		flag = !flag;
 	}
 }

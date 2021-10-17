@@ -1,7 +1,7 @@
 #ifndef HUMAN_H
 #define HUMAN_H
 
-#include"player.h"
+#include"player.hpp"
 
 #include<functional>
 

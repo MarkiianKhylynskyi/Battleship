@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include"grid.h"
+#include"grid.hpp"
 
 #include<vector>
 
@@ -26,7 +26,7 @@ public:
 
 	const std::vector<position>& get_empty_cells() const;
 
-	void set_grid(int16_t x, int16_t y, grid::Status status);
+	void set_grid(const position &pos, grid::Status status);
 
 	void print();
 };

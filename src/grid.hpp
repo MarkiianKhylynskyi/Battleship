@@ -1,9 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include<array>
-#include<cstdint>
-#include<iostream>
+#include <array>
 
 class grid
 {

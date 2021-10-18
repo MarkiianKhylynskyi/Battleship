@@ -1,14 +1,11 @@
-#include"grid.h"
+#include <iostream>
+
+#include "grid.hpp"
 
 void grid::reset()
 {
-	for (int16_t i = 0; i < GridSize; ++i)
-	{
-		for (int16_t j = 0; j < GridSize; ++j)
-		{
-			gr[i][j] = Status::Empty;
-		}
-	}
+	for (auto &a: gr)
+		a.fill(Status::Empty);
 }
 
 grid::grid()
@@ -26,43 +23,27 @@ void grid::set(int16_t x, int16_t y, Status status)
 	gr[x][y] = status;
 }
 
+static std::ostream &operator<<(std::ostream &o, grid::Status s)
+{
+	switch (s) {
+	case grid::Status::Empty: return o << ' ';
+	case grid::Status::Bomb: return o << '*';
+	case grid::Status::Ship: return o << '#';
+	case grid::Status::WoundedShip: return o << 'x';
+	default: return o;
+	}
+}
+
 void grid::print()
 {
-	for (char ch : {' ', ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'})
-	{
-		std::cout << ch;
-	}
-	std::cout << std::endl;
-	std::cout << std::endl;
-	for (int16_t i = 0; i < GridSize; ++i)
-	{
+	std::cout << "  ABCDEFGHIJ" << std::endl << std::endl;
+
+	int i = 0;
+	for (auto &a: gr) {
 		std::cout << i << ' ';
-		for (int16_t j = 0; j < GridSize; ++j)
-		{
-			switch (gr[i][j])
-			{
-			case Status::Empty:
-			{
-				std::cout << ' ';
-				break;
-			}
-			case Status::Bomb:
-			{
-				std::cout << '*';
-				break;
-			}
-			case Status::Ship:
-			{
-				std::cout << '#';
-				break;
-			}
-			case Status::WoundedShip:
-			{
-				std::cout << 'x';
-				break;
-			}
-			}
-		}
+		for (auto &b: a)
+			std::cout << b;
 		std::cout << std::endl;
+		++i;
 	}
 }

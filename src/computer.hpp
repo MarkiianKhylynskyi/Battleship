@@ -1,13 +1,9 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H
 
-#include"player.h"
+#include <random>
 
-#include<iterator>
-#include<utility>
-#include<algorithm>
-#include<random>
-#include<Windows.h>
+#include "player.hpp"
 
 class computer : public player
 {

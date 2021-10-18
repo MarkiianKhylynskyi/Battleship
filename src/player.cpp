@@ -1,13 +1,13 @@
-#include"player.h"
+#include <algorithm>
+
+#include "player.hpp"
 
 bool player::not_drowned_ships() const
 {
-	for (int16_t i = 0; i < grid::GridSize; ++i)
-	{
-		for (int16_t j = 0; j < grid::GridSize; ++j)
-		{
-			if (gr.get()[i][j] == grid::Status::Ship) return true;
-		}
+	for (auto &a: gr.get()) {
+		auto it = std::find(a.begin(), a.end(), grid::Status::Ship);
+		if (it != a.end())
+			return true;
 	}
 	return false;
 }
@@ -22,9 +22,9 @@ const std::vector<position>& player::get_empty_cells() const
 	return empty_cells;
 }
 
-void player::set_grid(int16_t x, int16_t y, grid::Status status)
+void player::set_grid(const position &pos, grid::Status status)
 {
-	gr.set(x, y, status);
+	gr.set(pos.first, pos.second, status);
 }
 
 void player::print()

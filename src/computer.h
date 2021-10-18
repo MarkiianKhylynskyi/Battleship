@@ -1,16 +1,22 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H
 
-#include"player.h"
+#include "player.h"
 
-#include<iterator>
-#include<utility>
-#include<algorithm>
-#include<random>
-#include<Windows.h>
+#include <iterator>
+#include <utility>
+#include <random>
 
 class computer : public player
 {
+public:
+	computer();
+
+	//Arranges ships on the primary grid
+	void past_ships() override;
+
+	void shoot(player& plr, bool& flag) override;
+
 private:
 	static std::mt19937 mt;
 	std::vector<position> wounded_ship;
@@ -24,9 +30,7 @@ private:
 	//Erases the elment pos from the vector vec
 	void erase_from_vector(std::vector<position>& vec, position pos) const;
 
-	void empty_cells_reset();
-
-	std::vector<position> posible_past_positions(bool vertical, int16_t siz) const;
+	std::vector<position> posible_past_positions(bool vertical, int16_t size) const;
 
 	std::vector<position> posible_positions() const;
 
@@ -38,13 +42,6 @@ private:
 
 	//Arranges a ship with length size on the primary grid
 	bool past_ship(int16_t size);
-public:
-	computer();
-
-	//Arranges ships on the primary grid
-	void past_ships() override;
-
-	void shoot(player& plr, bool& flag) override;
 };
 
 #endif //COMPUTER_H

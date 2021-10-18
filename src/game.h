@@ -1,10 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include"player.h"
-
-#include <stdlib.h>
-#include<Windows.h>
+#include "player.h"
 
 class game
 {
@@ -16,6 +13,9 @@ private:
 public:
 	game(player& first_player, player& second_player);
 
+	void set_first_name();
+	void set_second_name();
+	void set_names();
 	void play();
 };
 

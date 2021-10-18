@@ -1,4 +1,6 @@
-#include"computer.h"
+#include "computer.h"
+#include <algorithm>
+#include <Windows.h>
 
 std::mt19937 computer::mt;
 
@@ -25,18 +27,6 @@ void computer::erase_from_vector(std::vector<position>& vec, position pos) const
 	if (it != vec.end())
 	{
 		vec.erase(it);
-	}
-}
-
-void computer::empty_cells_reset()
-{
-	empty_cells.clear();
-	for (int16_t i = 0; i < grid::GridSize; ++i)
-	{
-		for (int16_t j = 0; j < grid::GridSize; ++j)
-		{
-			empty_cells.push_back(position(i,j));
-		}
 	}
 }
 
@@ -174,6 +164,7 @@ computer::computer()
 
 	std::random_device rd;
 	mt = std::mt19937(rd());
+	name = "Computer";
 }
 
 void computer::past_ships()
@@ -193,7 +184,7 @@ void computer::past_ships()
 
 void computer::shoot(player& plr, bool& flag)
 {
-	Sleep(500);
+	Sleep(700);
 	position shoot_position;
 	if (wounded_ship.empty())
 	{

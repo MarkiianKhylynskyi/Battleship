@@ -1,21 +1,20 @@
 #ifndef HUMAN_H
 #define HUMAN_H
 
-#include"player.h"
+#include "player.h"
 
-#include<functional>
+#include <string>
 
 class human : public player
 {
-private:
-	std::function<grid()> func_past_ships;
-	std::function<position()> func_shoot;
 public:
-	human(std::function<grid()> func_past_ships, std::function<position()> func_shoot);
+	human();
+
+	void set_name(std::string name);
 
 	void past_ships() override;
 
-	void shoot(player& plr, bool& flag) override;
+	void shoot(player& plr, bool& flag) override;	
 };
 
 #endif //HUMAN_H

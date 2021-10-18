@@ -5,7 +5,6 @@ project(${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
-	src/main.h
 	src/computer.cpp
 	src/computer.h
 	src/game.cpp
@@ -16,4 +15,6 @@ add_executable(${PROJECT_NAME}
 	src/grid.h
 	src/player.cpp
 	src/player.h
+	src/menu.cpp
+	src/menu.h
 )

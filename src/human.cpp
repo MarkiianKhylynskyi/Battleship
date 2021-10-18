@@ -1,17 +1,54 @@
-#include"human.h"
+#include "human.h"
+#include <iostream>
 
-human::human(std::function<grid()> func_past_ships, std::function<position()> func_shoot)
-	: func_past_ships(func_past_ships), func_shoot(func_shoot)
-{}
+human::human()
+{
+	empty_cells_reset();
+}
+
+void human::set_name(std::string name)
+{
+	this->name = name;
+}
 
 void human::past_ships()
 {
-	gr = func_past_ships();
+	char y = 0;
+	int16_t x = 0;
+
+	do
+	{
+		gr.reset();
+		for (int16_t i = 0; i < 20; ++i)
+		{
+			do
+			{
+				system("cls");
+				std::cout << "Past ships\n";
+				show(0);
+				std::cout << std::endl << "Position: ";
+				std::cin >> y >> x;
+			} while ((x < 0) || (x > 9) || (y < 65) || (y > 74));
+			gr.set(x, y - 65, grid::Status::Ship);
+		}
+	} while (!gr.correct_past());
+	
 }
 
 void human::shoot(player& plr, bool& flag)
 {
-	position shoot_position = func_shoot();
+	std::cout << std::endl;
+	char y = 0;
+	int16_t x = 0;
+	position shoot_position;
+	do
+	{
+		std::cout << name << ": ";
+		std::cin >> y >> x;
+		system("cls");
+		shoot_position.first = x;
+		shoot_position.second = y - 65;
+	} while (std::find(empty_cells.begin(), empty_cells.end(), shoot_position) == empty_cells.end());
 
 	empty_cells.erase(std::find(empty_cells.begin(), empty_cells.end(), shoot_position));
 

@@ -1,17 +1,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include"grid.h"
-
-#include<vector>
+#include "grid.h"
+#include <vector>
+#include <string>
 
 typedef std::pair<int16_t, int16_t> position;
 
 class player
 {
-protected:
-	grid gr;
-	std::vector<position> empty_cells;
 public:
 	//Arranges ships on the primary grid
 	virtual void past_ships() = 0;
@@ -26,9 +23,20 @@ public:
 
 	const std::vector<position>& get_empty_cells() const;
 
+	const std::string get_name() const;
+
 	void set_grid(int16_t x, int16_t y, grid::Status status);
 
-	void print();
+	void set_name(std::string name);
+
+	void show(bool hidden);
+
+protected:
+	grid gr;
+	std::vector<position> empty_cells;
+	std::string name;
+
+	void empty_cells_reset();
 };
 
 #endif //PLAYER_H
